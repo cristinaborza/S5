@@ -25,11 +25,18 @@ theorem subctx_ax { Γ Δ : ctx } { p : form } : (Δ ⊆ Γ) → (Δ ⊢ₛ₅ p
 
 
 -- Right-hand side basic rules of inference
-theorem pr { Γ : ctx } { p : form } : (Γ ∪ p) ⊢ₛ₅ p := ax $ by constructor
-theorem pr1 { Γ : ctx } { p q : form } : ((Γ ∪ p) ∪ q) ⊢ₛ₅ p := ax $ by (repeat constructor)
-theorem pr2 { Γ : ctx } { p q : form } : ((Γ ∪ p) ∪ q) ⊢ₛ₅ q := ax $ by constructor
+theorem pr { Γ : ctx } { p : form } : (Γ ∪ p) ⊢ₛ₅ p := 
+  ax $ by constructor
+
+theorem pr1 { Γ : ctx } { p q : form } : ((Γ ∪ p) ∪ q) ⊢ₛ₅ p := 
+  ax $ by (repeat constructor)
+
+theorem pr2 { Γ : ctx } { p q : form } : ((Γ ∪ p) ∪ q) ⊢ₛ₅ q := 
+  ax $ by constructor
+
 theorem by_mp1 {Γ : ctx } {p q : form } : ((Γ ∪ p) ∪ p → q) ⊢ₛ₅ q := mp pr2 pr1
 theorem by_mp2 {Γ : ctx } {p q : form } : ((Γ ∪ p → q) ∪ p) ⊢ₛ₅ q := mp pr1 pr2 
+
 theorem cut { Γ : ctx } { p q r : form } : (Γ ⊢ₛ₅ p → q) → (Γ ⊢ₛ₅ q → r) → (Γ ⊢ₛ₅ p → r) := by 
   intro hpq hqr 
   apply mp (mp pl2 (mp pl1 hqr)) hpq
@@ -45,10 +52,28 @@ theorem mp_in_ctx_right { Γ : ctx } { p q r : form } : (((Γ ∪ p) ∪ p → q
 
 
 -- Basic lemmas
-theorem ot_impl { Γ : ctx } { p q : form } : Γ ⊢ₛ₅ (p → q) → ((¬q) → (¬p)) := sorry
-theorem dne { Γ : ctx } { p : form } : Γ ⊢ₛ₅ (¬¬p) → p := sorry 
-theorem dni { Γ : ctx } { p : form } : Γ ⊢ₛ₅ p → (¬¬p) := sorry
+theorem not_impl { Γ : ctx } { p q : form } : Γ ⊢ₛ₅ (p → q) → ((¬q) → (¬p)) := sorry
+
+theorem dne { Γ : ctx } { p : form } : Γ ⊢ₛ₅ (¬¬p) → p := sorry
+theorem dni { Γ : ctx } { p : form } : Γ ⊢ₛ₅ p → (¬¬p) := mp prf.pl3 dne
+
 theorem lem { Γ : ctx } { p : form } : Γ ⊢ₛ₅ p ∨ ¬p := sorry
+
 theorem not_impl_to_and { Γ : ctx } { p q : form } : Γ ⊢ₛ₅ (¬(p → q)) → (p ∨ (¬q)) := sorry
+
 theorem and_not_to_not_impl { Γ : ctx } { p q : form } : Γ ⊢ₛ₅ (p ∨ (¬q)) → (¬(p → q)) := sorry
-theorem box_contrap { p q : form } : ⊢ₛ₅ (□(p → q)) → (□((¬q) → (¬p))) := sorry
+
+theorem box_contrap { p q : form } : ⊢ₛ₅ (□(p → q)) → (□((¬q) → (¬p))) := 
+  mp k (prf.nec not_impl)
+
+theorem diamond_k { p q : form } : ⊢ₛ₅ (□(p → q)) → ((⋄p) → (⋄q)) := 
+  deduction $ mp not_impl (mp k (mp (weak box_contrap) pr))
+
+theorem box_dne { p : form } : ⊢ₛ₅ (□(¬¬p)) → (□p) := mp k (prf.nec dne)
+theorem box_dni { p : form } : ⊢ₛ₅ (□p) → (□(¬¬p)) := mp k (prf.nec dni)
+
+theorem not_box_dni { p : form } : ⊢ₛ₅ (¬□p) → (¬□(¬¬p)) := mp not_impl box_dne 
+theorem not_box_dne { p : form } : ⊢ₛ₅ (¬□(¬¬p)) → (¬□p) := mp not_impl box_dni 
+
+
+
