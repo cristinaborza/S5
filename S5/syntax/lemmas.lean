@@ -79,7 +79,7 @@ theorem not_impl { Γ : ctx } { p q : form } : Γ ⊢ₛ₅ (p → q) → ((¬q)
 theorem dne { Γ : ctx } { p : form } : Γ ⊢ₛ₅ (¬¬p) → p := sorry
 theorem dni { Γ : ctx } { p : form } : Γ ⊢ₛ₅ p → (¬¬p) := mp prf.pl3 dne
 
-theorem lem { Γ : ctx } { p : form } : Γ ⊢ₛ₅ p ∨ ¬p := sorry
+theorem lem { Γ : ctx } { p : form } : Γ ⊢ₛ₅ (p ∨ (¬p)) := sorry
 
 theorem not_impl_to_and { Γ : ctx } { p q : form } : Γ ⊢ₛ₅ (¬(p → q)) → (p ∨ (¬q)) := sorry
 
