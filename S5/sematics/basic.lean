@@ -24,3 +24,16 @@ noncomputable def forces_form (M : model) : form → world → Bool
     else False
 
 notation M "," w "⊩" p => forces_form M p w
+
+/- Local logical consequence -/
+noncomputable def forces_ctx (M : model) (Γ : ctx) (w : world) : Bool :=
+  if (∀ p, (p ∈ Γ) → (forces_form M p w = True))
+    then True 
+  else False
+
+notation M "," w "⊩" p => forces_ctx M p w
+
+inductive sem_csq : ctx → form → Prop where
+| is_true { Γ : ctx } { p : form } (h : ∀ {M : model}, (w ∈ M.worlds) → ((M, w ⊩ Γ) = True) → ((M, w ⊩ p) = True)) : sem_csq Γ p
+
+notation Γ "⊩ₛ₅" p => sem_csq Γ p

@@ -12,39 +12,85 @@ theorem idd { p : form } { Γ : ctx } : Γ ⊢ₛ₅ p → p := by
   case hp => exact @pl1 Γ p p
 
 -- Deduction metatheorem
-theorem deduction { Γ : ctx } { p q : form } : ((Γ ∪ p) ⊢ₛ₅ q) → (Γ ⊢ₛ₅ p → q) := sorry
-
+theorem deduction { Γ : ctx } { p q : form } : ((Γ ∪ p) ⊢ₛ₅ q) → (Γ ⊢ₛ₅ p → q) := by
+  intros h 
+  cases h
+  {
+    rename_i h₀;
+    cases h₀;
+    { exact idd }
+    {
+      rename_i h₁;
+      exact mp pl1 (ax h₁)
+    }
+  } 
+  { exact mp pl1 pl1 }
+  { exact mp pl1 pl2 }
+  { exact mp pl1 pl3 }
+  { 
+    sorry
+  }
+  { exact mp pl1 k }
+  { exact mp pl1 t }
+  { exact mp pl1 s4 }
+  { exact mp pl1 s5 }
+  { 
+    rename_i h₀;
+    exact mp pl1 (nec h₀)
+  }
 
 -- Structural rules
-theorem sub_weak { Γ Δ : ctx } { p : form } : (Δ ⊢ₛ₅ p) → (Δ ⊆ Γ) → (Γ ⊢ₛ₅ p) := sorry
--- theorem sub_weak { Γ Δ : ctx } { p : form } : (Δ ⊢ₛ₅ p) → (Δ ⊆ Γ) → (Γ ⊢ₛ₅ p) := by 
---   intros h₀ h₁
---   induction h₀
---   {
---     rename_i Δ p h₂;
---     apply ax;
---   }
---   { exact pl1 }
---   { exact pl2 }
---   { exact pl3 }
---   { apply mp
---     { exact h_ih_hpq s }
---     { exact h_ih_hp s} }
---   { exact k }
---   { exact t }
---   { exact s4 }
---   { exact s5 }
---   { exact nec }
+-- theorem sub_weak { Γ Δ : ctx } { p : form } : (Δ ⊢ₛ₅ p) → (Δ ⊆ Γ) → (Γ ⊢ₛ₅ p) := sorry
+theorem sub_weak { Γ Δ : ctx } { p : form } : (Δ ⊢ₛ₅ p) → (Δ ⊆ Γ) → (Γ ⊢ₛ₅ p) := by 
+  intros h₀ h₁
+  induction h₀
+  {
+    rename_i Δ p h₂;
+    apply ax;
+    sorry
+    -- apply ax;
+  }
+  { exact pl1 }
+  { exact pl2 }
+  { exact pl3 }
+  { sorry }
+  { exact k }
+  { exact t }
+  { exact s4 }
+  { exact s5 }
+  { sorry }
 
+theorem weak { Γ : ctx } { p q : form } :(Γ ⊢ₛ₅ p) → ((Γ ∪ q) ⊢ₛ₅ p) := by
+  intros h 
+  induction h 
+  { sorry }
+  { exact pl1 }
+  { exact pl2 }
+  { exact pl3 }
+  { sorry }
+  { exact k }
+  { exact t }
+  { exact s4 }
+  { exact s5 }
+  { sorry }
 
-
---theorem sub_weak { Γ Δ : ctx } { p : form } : (Δ ⊢ₛ₅ p) → (Δ ⊆ Γ) → (Γ ⊢ₛ₅ p) := sorry 
-theorem weak { Γ : ctx } { p q : form } :(Γ ⊢ₛ₅ p) → ((Γ ∪ q) ⊢ₛ₅ p) := sorry 
 theorem contr { Γ : ctx } { p q : form } : (((Γ ∪ p) ∪ p) ⊢ₛ₅ q) → ((Γ ∪ p) ⊢ₛ₅ q) := sorry
-theorem exg { Γ : ctx } { p q r : form } : (((Γ ∪ p) ∪ q) ⊢ₛ₅ r) → (((Γ ∪ q) ∪ p) ⊢ₛ₅ r) := sorry
-theorem subctx_ax { Γ Δ : ctx } { p : form } : (Δ ⊆ Γ) → (Δ ⊢ₛ₅ p) → (Γ ⊢ₛ₅ p) := sorry
---theorem subctx_contr { Γ Δ : ctx } { p : form } : (Δ ⊆ Γ) → ((Γ ∪ Δ) ⊢ₛ₅ p) → (Γ ⊢ₛ₅ p) := sorry
 
+theorem exg { Γ : ctx } { p q r : form } : (((Γ ∪ p) ∪ q) ⊢ₛ₅ r) → (((Γ ∪ q) ∪ p) ⊢ₛ₅ r) := sorry
+
+theorem subctx_ax { Γ Δ : ctx } { p : form } : (Δ ⊆ Γ) → (Δ ⊢ₛ₅ p) → (Γ ⊢ₛ₅ p) := by
+  intros s h 
+  induction h 
+  { sorry }
+  { exact pl1 }
+  { exact pl2 }
+  { exact pl3 }
+  { sorry }
+  { exact k }
+  { exact t }
+  { exact s4 }
+  { exact s5 }
+  { sorry }
 
 -- Right-hand side basic rules of inference
 theorem pr { Γ : ctx } { p : form } : (Γ ∪ p) ⊢ₛ₅ p := 
