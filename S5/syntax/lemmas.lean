@@ -12,11 +12,33 @@ theorem idd { p : form } { Γ : ctx } : Γ ⊢ₛ₅ p → p := by
   case hp => exact @pl1 Γ p p
 
 -- Deduction metatheorem
-theorem deduction { Γ : ctx } { p q : form } : ((Γ ∪ p) ⊢ₛ₅ q) → (Γ ⊢ₛ₅ p → q) := sorry 
+theorem deduction { Γ : ctx } { p q : form } : ((Γ ∪ p) ⊢ₛ₅ q) → (Γ ⊢ₛ₅ p → q) := sorry
 
 
 -- Structural rules
-theorem sub_weak { Γ Δ : ctx } { p : form } : (Δ ⊢ₛ₅ p) → (Δ ⊆ Γ) → (Γ ⊢ₛ₅ p) := sorry 
+theorem sub_weak { Γ Δ : ctx } { p : form } : (Δ ⊢ₛ₅ p) → (Δ ⊆ Γ) → (Γ ⊢ₛ₅ p) := sorry
+-- theorem sub_weak { Γ Δ : ctx } { p : form } : (Δ ⊢ₛ₅ p) → (Δ ⊆ Γ) → (Γ ⊢ₛ₅ p) := by 
+--   intros h₀ h₁
+--   induction h₀
+--   {
+--     rename_i Δ p h₂;
+--     apply ax;
+--   }
+--   { exact pl1 }
+--   { exact pl2 }
+--   { exact pl3 }
+--   { apply mp
+--     { exact h_ih_hpq s }
+--     { exact h_ih_hp s} }
+--   { exact k }
+--   { exact t }
+--   { exact s4 }
+--   { exact s5 }
+--   { exact nec }
+
+
+
+--theorem sub_weak { Γ Δ : ctx } { p : form } : (Δ ⊢ₛ₅ p) → (Δ ⊆ Γ) → (Γ ⊢ₛ₅ p) := sorry 
 theorem weak { Γ : ctx } { p q : form } :(Γ ⊢ₛ₅ p) → ((Γ ∪ q) ⊢ₛ₅ p) := sorry 
 theorem contr { Γ : ctx } { p q : form } : (((Γ ∪ p) ∪ p) ⊢ₛ₅ q) → ((Γ ∪ p) ⊢ₛ₅ q) := sorry
 theorem exg { Γ : ctx } { p q r : form } : (((Γ ∪ p) ∪ q) ⊢ₛ₅ r) → (((Γ ∪ q) ∪ p) ⊢ₛ₅ r) := sorry
@@ -34,8 +56,8 @@ theorem pr1 { Γ : ctx } { p q : form } : ((Γ ∪ p) ∪ q) ⊢ₛ₅ p :=
 theorem pr2 { Γ : ctx } { p q : form } : ((Γ ∪ p) ∪ q) ⊢ₛ₅ q := 
   ax $ by constructor
 
-theorem by_mp1 {Γ : ctx } {p q : form } : ((Γ ∪ p) ∪ p → q) ⊢ₛ₅ q := mp pr2 pr1
-theorem by_mp2 {Γ : ctx } {p q : form } : ((Γ ∪ p → q) ∪ p) ⊢ₛ₅ q := mp pr1 pr2 
+theorem by_mp1 { Γ : ctx } { p q : form } : ((Γ ∪ p) ∪ p → q) ⊢ₛ₅ q := mp pr2 pr1
+theorem by_mp2 { Γ : ctx } { p q : form } : ((Γ ∪ p → q) ∪ p) ⊢ₛ₅ q := mp pr1 pr2 
 
 theorem cut { Γ : ctx } { p q r : form } : (Γ ⊢ₛ₅ p → q) → (Γ ⊢ₛ₅ q → r) → (Γ ⊢ₛ₅ p → r) := by 
   intro hpq hqr 
@@ -75,5 +97,26 @@ theorem box_dni { p : form } : ⊢ₛ₅ (□p) → (□(¬¬p)) := mp k (prf.ne
 theorem not_box_dni { p : form } : ⊢ₛ₅ (¬□p) → (¬□(¬¬p)) := mp not_impl box_dne 
 theorem not_box_dne { p : form } : ⊢ₛ₅ (¬□(¬¬p)) → (¬□p) := mp not_impl box_dni 
 
+theorem diamond_dne { p : form } : ⊢ₛ₅ (⋄(¬¬p)) → (⋄p) := not_box_dne
+theorem diamond_dni { p : form } : ⊢ₛ₅ (⋄p) → (⋄(¬¬p)) := not_box_dni
 
+theorem contrap_b { p : form } : ⊢ₛ₅ (⋄(□p)) → p := sorry
 
+-- Notable introduction rules
+theorem negintro { Γ : ctx } { p q : form } : (Γ ⊢ₛ₅ p → q) → (Γ ⊢ₛ₅ p → (¬q)) → (Γ ⊢ₛ₅ (¬p)) := sorry 
+-- theorem ex_falso { Γ : ctx } { p : form } : (Γ ⊢ₛ₅ ⊥) → (Γ ⊢ₛ₅ p) := sorry
+theorem ex_falso_and { Γ : ctx } { p q : form } : Γ ⊢ₛ₅ (¬p) → (p → q) := sorry 
+theorem ex_falso_pos { Γ : ctx } { p q : form } : Γ ⊢ₛ₅ p → ((¬p) → q) := sorry
+theorem contr_conseq { Γ : ctx } { p r : form } : Γ ⊢ₛ₅ (p → r) → (((¬p) → r) → r) := sorry
+theorem impl_weak { Γ : ctx } { p q r : form } (h : ((Γ ∪ r) ⊢ₛ₅ p) → (Γ ⊢ₛ₅ p)) :
+  ((Γ ⊢ₛ₅ p) → (Γ ⊢ₛ₅ q)) → (((Γ ∪ r) ⊢ₛ₅ p) → ((Γ ∪ r) ⊢ₛ₅ q)) := sorry 
+
+theorem and_intro { Γ : ctx } { p q : form } : (Γ ⊢ₛ₅ p) → (Γ ⊢ₛ₅ q) → (Γ ⊢ₛ₅ (p ∧ q)) := sorry 
+theorem and_elim_left { Γ : ctx } { p q : form } : ((Γ ∪ (p ∧ q)) ⊢ₛ₅ p) := sorry
+theorem and_elim_right { Γ : ctx } { p q : form } : ((Γ ∪ (p ∧ q)) ⊢ₛ₅ q) := sorry 
+
+theorem or_intro_left { Γ : ctx } { p q r : form } : (Γ ⊢ₛ₅ p) → (Γ ⊢ₛ₅ (p ∨ q)) := sorry 
+theorem or_intro_right { Γ : ctx } { p q r : form } : (Γ ⊢ₛ₅ q) → (Γ ⊢ₛ₅ (p ∨ q)) := sorry 
+theorem or_elim { Γ : ctx } { p q r : form } : (Γ ⊢ₛ₅ (p ∨ q)) → (Γ ⊢ₛ₅ p → r) → (Γ ⊢ₛ₅ q → r) → (Γ ⊢ₛ₅ r) := sorry 
+theorem detach_pos { Γ : ctx } { p q : form } : ((Γ ∪ p) ⊢ₛ₅ q) → ((Γ ∪ ¬p) ⊢ₛ₅ q) → (Γ ⊢ₛ₅ q) := sorry 
+theorem detach_neg { Γ : ctx } { p q : form } : ((Γ ∪ ¬p) ⊢ₛ₅ q) → ((Γ ∪ p) ⊢ₛ₅ q) → (Γ ⊢ₛ₅ q) := sorry 
