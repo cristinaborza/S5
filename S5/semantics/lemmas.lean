@@ -1,4 +1,4 @@
-import S5.sematics.basic
+import S5.semantics.basic
 
 open Classical
 
